@@ -3,11 +3,24 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from .models import *
+from core.widgets import TableCheckboxSelectMultiple
 
-
-@admin.register(Shelf, UoM, Menu)
+@admin.register(Shelf, UoM)
 class GenericModelAdmin(admin.ModelAdmin):
     pass
+
+class MenuAdminForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        widgets = {
+            'courses': TableCheckboxSelectMultiple(),
+        }
+        fields = '__all__'
+
+@admin.register(Menu)
+class MenuModelAdmin(admin.ModelAdmin):
+    form = MenuAdminForm
+
 
 class ProductRecipeChoiceField(forms.ModelChoiceField):
      def label_from_instance(self, obj):

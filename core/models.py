@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from django.core.validators import MinValueValidator
+from django.utils.html import format_html
 
 
 class Shelf(models.Model):
@@ -37,8 +38,24 @@ class Product(models.Model):
     kind = models.SmallIntegerField(choices=KIND_CHOICES, null=False, blank=False)
     is_complete_meal = models.NullBooleanField()
 
+    def in_warehouse(self):
+        return Warehouse.objects.filter(product=self).aggregate(models.Sum('quantity'))['quantity__sum'] or 0
+
+    def can_be_produced(self):
+        import math
+        result = math.inf
+
+        for ingredient in self.recipe.ingredient_set.all():
+            print(ingredient)
+            print(ingredient.product.in_warehouse())
+            print(ingredient.qty_needed)
+
+            result = min(result, ingredient.product.in_warehouse() / ingredient.qty_needed)
+        
+        return result
+
     def __str__(self):
-        return self.name
+        return self.name 
 
     class Meta:
         verbose_name = 'Prodotto'
@@ -58,16 +75,14 @@ class Recipe(models.Model):
 
 class Ingredient(models.Model):
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
-    receipe = models.ForeignKey(Recipe, null=False, blank=False, on_delete=models.CASCADE)
-    qty_to_product = models.DecimalField(decimal_places=5, max_digits=15, null=False, blank=False,
-                                         validators=[MinValueValidator(0)])
+    recipe = models.ForeignKey(Recipe, null=False, blank=False, on_delete=models.CASCADE)
     qty_needed = models.DecimalField(decimal_places=5, max_digits=15, null=False, blank=False,
                                      validators=[MinValueValidator(0)])
 
     class Meta:
         verbose_name = 'Ingrediente'
         verbose_name_plural = 'Ingredienti'
-        unique_together = ('product', 'receipe', 'qty_to_product',)
+        unique_together = ('product', 'recipe',)
 
 
 
@@ -88,8 +103,9 @@ class Warehouse(models.Model):
 
 class Menu(models.Model):
     date = models.DateField(null=False, blank=False)
-    description = models.TextField(null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
     courses = models.ManyToManyField(Product)
+
 
     class Meta:
         verbose_name = 'Menu'

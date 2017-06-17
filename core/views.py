@@ -1,3 +1,19 @@
+from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
 
-# Create your views here.
+
+@staff_member_required
+def warehouse_summary_view(request):
+    """
+    If you're using multiple admin sites with independent views you'll need to set
+    current_app manually and use correct admin.site
+    # request.current_app = 'admin'
+    """
+    context = admin.site.each_context(request)
+    context.update({
+        'title': 'Riepilogo magazzino',
+    })
+
+    template = 'core/warehouse_summary.html'
+    return render(request, template, context)

@@ -1,0 +1,23 @@
+{% load humanize %}
+{% with id=widget.attrs.id %}
+<table  class="table table-striped">
+    <thead>
+        <tr><th>Selezionato</th><th>Nome</th><th>Piatto unico</th><th>Quantità in magazzino</th><th>Quantità producibile</th></tr>
+    </thead>
+    <tbody>
+    {% for group, options, index in widget.optgroups %}        
+        {% for option in options %}
+        {% if option.product %}
+            <tr>
+            <td><input type="checkbox" name="{{ option.name }}" value="{{ option.value }}" {% if option.attrs.checked %}checked{% endif %}></td>
+            <td>{{ option.product.name }}</td>
+            <td>{% if option.product.is_complete_meal %}Sì{% else %}No{% endif %}</td>
+            <td>{{ option.product.in_warehouse|floatformat:0|intcomma }} {{ option.product.uom.name }}</td>
+            <td>{{ option.product.can_be_produced|floatformat:0|intcomma }} {{ option.product.uom.name }}</td>
+            </tr>
+        {% endif %}
+        {% endfor %}        
+    {% endfor %}
+    </tbody>
+</table>
+{% endwith %}
