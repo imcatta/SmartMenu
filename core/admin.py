@@ -16,7 +16,7 @@ class MenuAdminForm(forms.ModelForm):
         widgets = {
             'courses': TableCheckboxSelectMultiple(),
         }
-        fields = '__all__'
+        fields = ('date', 'courses', 'note',)
 
 @admin.register(Menu)
 class MenuModelAdmin(admin.ModelAdmin):
