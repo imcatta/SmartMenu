@@ -89,7 +89,7 @@ class Ingredient(models.Model):
 class Warehouse(models.Model):
     product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.PROTECT, verbose_name='Prodotto')
     quantity = models.DecimalField(decimal_places=5, max_digits=15, null=False, blank=False,
-                                   validators=[MinValueValidator(0)])
+                                   validators=[MinValueValidator(0)], verbose_name='Quantità')
     shelf = models.ForeignKey(Shelf, null=False, blank=False, on_delete=models.PROTECT, verbose_name='Scaffale')
     date = models.DateTimeField(null=False, blank=False, default=now, verbose_name='Data')
 

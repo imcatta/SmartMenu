@@ -9,8 +9,6 @@ with transaction.atomic():
     from django.contrib.auth.models import User
     if not User.objects.filter(username='admin').exists():
         User.objects.create_superuser(username='admin', password='admin', email='')
-
-
     
     Warehouse.objects.all().delete()
     Recipe.objects.all().delete()
@@ -52,6 +50,14 @@ with transaction.atomic():
     p_verdure = Product.objects.create(name='''Verdure sott'olio''', uom=uom_kg, kind=Product.MATERIA_PRIMA)
     p_pasta_pomodoro = Product.objects.create(name='Pasta al pomodoro', uom=uom_prz, kind=Product.PIATTO)
     p_riso_zafferano = Product.objects.create(name='Riso allo zafferano', uom=uom_prz, kind=Product.PIATTO)
+    p_pasta_ragu = Product.objects.create(name='Pasta al ragù', uom=uom_prz, kind=Product.PIATTO)
+    p_carne_trita = Product.objects.create(name='Carne trita', uom=uom_prz, kind=Product.MATERIA_PRIMA)
+    p_ragu = Product.objects.create(name='Ragù', uom=uom_g, kind=Product.PREPARATO)
+    p_lasagne = Product.objects.create(name='Lasagne', uom=uom_prz, kind=Product.PIATTO)
+    p_pasta_ragu = Product.objects.create(name='Pasta al ragù', uom=uom_prz, kind=Product.PIATTO)
+    p_besciamella = Product.objects.create(name='Besciamella', uom=uom_g, kind=Product.MATERIA_PRIMA)
+    p_pasta_sfoglia = Product.objects.create(name='Pasta sfoglia', uom=uom_kg, kind=Product.MATERIA_PRIMA)
+
 
     # Warehouse
     from random import randint
@@ -75,11 +81,14 @@ with transaction.atomic():
     # Warehouse.objects.create(product=p_basilico, quantity=15, shelf=shelf_b2)
 
     # Recipe
-    r_pizza_margherita = Recipe.objects.create(product=p_pizza_margherita)
-    r_pizza_americana = Recipe.objects.create(product=p_pizza_americana)
-    r_pizza_quattro_stagioni = Recipe.objects.create(product=p_pizza_quattro_stagioni)
-    r_pasta_pomodoro = Recipe.objects.create(product=p_pasta_pomodoro)
-    r_riso_zafferano = Recipe.objects.create(product=p_riso_zafferano)
+
+    r_pizza_margherita = Recipe.objects.create(product=p_pizza_margherita, time_needed=10)
+    r_pizza_americana = Recipe.objects.create(product=p_pizza_americana, time_needed=12)
+    r_pizza_quattro_stagioni = Recipe.objects.create(product=p_pizza_quattro_stagioni, time_needed=12)
+    r_pasta_pomodoro = Recipe.objects.create(product=p_pasta_pomodoro, time_needed=10)
+    r_riso_zafferano = Recipe.objects.create(product=p_riso_zafferano, time_needed=15)
+    r_pasta_ragu =  Recipe.objects.create(product=p_pasta_ragu, time_needed=10)
+    r_lasagne = Recipe.objects.create(product=p_lasagne, time_needed=60)
 
     # Ingredienti
     #Pizza margherita
@@ -97,12 +106,21 @@ with transaction.atomic():
     Ingredient.objects.create(recipe=r_pizza_quattro_stagioni, product=p_mozzarella, qty_needed=0.3)
     Ingredient.objects.create(recipe=r_pizza_quattro_stagioni, product=p_sale, qty_needed=20)
     Ingredient.objects.create(recipe=r_pizza_quattro_stagioni, product=p_verdure, qty_needed=0.15)
-    #Pasta al pomodoro
-    Ingredient.objects.create(recipe=r_pasta_pomodoro, product=p_pasta, qty_needed=0.08)
-    Ingredient.objects.create(recipe=r_pasta_pomodoro, product=p_salsa_pomodoro, qty_needed=0.01)
-    #Riso allo zafferanp
+    #Riso allo zafferano
     Ingredient.objects.create(recipe=r_riso_zafferano, product=p_riso, qty_needed=0.08)
     Ingredient.objects.create(recipe=r_pasta_pomodoro, product=p_zafferano, qty_needed=2)
+    #Pasta al ragu
+    Ingredient.objects.create(recipe=r_pasta_ragu, product=p_pasta, qty_needed=0.08)
+    Ingredient.objects.create(recipe=r_pasta_ragu, product=p_ragu, qty_needed=30)
+    #Pasta al pomodoro
+    Ingredient.objects.create(recipe=r_pasta_pomodoro, product=p_pasta, qty_needed=0.08)
+    Ingredient.objects.create(recipe=r_pasta_pomodoro, product=p_basilico, qty_needed=4)
+    Ingredient.objects.create(recipe=r_pasta_pomodoro, product=p_salsa_pomodoro, qty_needed=0.01)
+    #Lasagne
+    Ingredient.objects.create(recipe=r_lasagne, product=p_pasta_sfoglia, qty_needed=0.08)
+    Ingredient.objects.create(recipe=r_lasagne, product=p_ragu, qty_needed=0.3)
+    Ingredient.objects.create(recipe=r_lasagne, product=p_besciamella, qty_needed=0.01)
+
 
 
     
