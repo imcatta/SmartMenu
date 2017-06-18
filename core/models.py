@@ -64,6 +64,7 @@ class Product(models.Model):
 class Recipe(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE, primary_key=True)
     note = models.TextField(null=True, blank=True)
+    time_needed = models.IntegerField(verbose_name='Tempo necessario (in minuti)', default=15, validators=[MinValueValidator(0)])
 
     def __str__(self):
         return str(self.product)

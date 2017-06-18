@@ -32,7 +32,7 @@ class RecipeModelForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = ('product', 'note',)
+        fields = ('product', 'note', 'time_needed',)
 
 class IngredientInline(admin.TabularInline):
     model = Ingredient

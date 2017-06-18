@@ -1,5 +1,7 @@
 from django.db import transaction
 from core.models import UoM, Shelf, Recipe, Product, Warehouse, Ingredient
+from django.utils.timezone import now
+from datetime import timedelta
 
 with transaction.atomic():
     
@@ -52,8 +54,16 @@ with transaction.atomic():
     p_riso_zafferano = Product.objects.create(name='Riso allo zafferano', uom=uom_prz, kind=Product.PIATTO)
 
     # Warehouse
-    for p in Product.objects.all():
-        Warehouse.objects.create(product=p, quantity=999, shelf=shelf_a1)
+    from random import randint
+    for p in Product.objects.filter(kind__in=(Product.MATERIA_PRIMA, Product.PREPARATO,)):
+        Warehouse.objects.create(product=p, quantity=randint(0, 100), shelf=Shelf.objects.order_by('?').first())
+
+    for p in Product.objects.filter(kind=Product.PIATTO):
+        if randint(0, 1):
+            date = now() if randint(0, 1) else now() - timedelta(days=2)
+            shelf = Shelf.objects.order_by('?').first()
+            Warehouse.objects.create(product=p, quantity=randint(0, 20), shelf=shelf, date=date)
+
     
     # Warehouse.objects.create(product=p_riso, quantity=20, shelf=shelf_a1)
     # Warehouse.objects.create(product=p_pasta, quantity=30, shelf=shelf_a1)

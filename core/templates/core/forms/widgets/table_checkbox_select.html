@@ -2,7 +2,7 @@
 {% with id=widget.attrs.id %}
 <table  class="table table-striped">
     <thead>
-        <tr><th>Selezionato</th><th>Nome</th><th>Piatto unico</th><th>Quantità in magazzino</th><th>Quantità producibile</th></tr>
+        <tr><th>Selezionato</th><th>Nome</th><th>Piatto unico</th><th>Quantità in magazzino</th><th>Quantità producibile</th><th>Tempo preparazione</th></tr>
     </thead>
     <tbody>
     {% for group, options, index in widget.optgroups %}        
@@ -14,6 +14,7 @@
             <td>{% if option.product.is_complete_meal %}Sì{% else %}No{% endif %}</td>
             <td>{{ option.product.in_warehouse|floatformat:0|intcomma }} {{ option.product.uom.name }}</td>
             <td>{{ option.product.can_be_produced|floatformat:0|intcomma }} {{ option.product.uom.name }}</td>
+            <td>{% if option.product.recipe %}{{ option.product.recipe.time_needed }} min{% else %}N/D{% endif %}</td>
             </tr>
         {% endif %}
         {% endfor %}        
