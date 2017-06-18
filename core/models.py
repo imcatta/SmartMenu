@@ -3,7 +3,6 @@ from django.utils.timezone import now
 from django.core.validators import MinValueValidator
 from django.utils.html import format_html
 
-
 class Shelf(models.Model):
     id = models.CharField(max_length=5, primary_key=True)
 
@@ -102,9 +101,9 @@ class Warehouse(models.Model):
 
 
 class Menu(models.Model):
-    date = models.DateField(null=False, blank=False)
+    date = models.DateField(null=False, blank=False, verbose_name='Data')
     note = models.TextField(null=True, blank=True)
-    courses = models.ManyToManyField(Product)
+    courses = models.ManyToManyField(Product, verbose_name='Piatti')
 
 
     class Meta:

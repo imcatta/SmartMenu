@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from .models import *
 from core.widgets import TableCheckboxSelectMultiple
+from django.utils.timezone import now
 
 @admin.register(Shelf, UoM)
 class GenericModelAdmin(admin.ModelAdmin):
@@ -55,4 +56,8 @@ class ProductModelAdmin(admin.ModelAdmin):
 class WarehouseModelAdmin(admin.ModelAdmin):
     fields = ('product', ('quantity', ), 'shelf', 'date',)
     list_display = ('product', 'human_readable_quantity', 'date', 'shelf',)
+
+    def suit_row_attributes(self, obj, request):
+        if obj.product.kind == Product.PIATTO and ((now() - obj.date).days >= 1):
+            return {'class' :'table-danger'}
 
