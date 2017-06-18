@@ -1,19 +1,25 @@
-from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
-from django.shortcuts import render
+from django import http
+import xhtml2pdf.pisa as pisa
+from django.shortcuts import render_to_response
+from django.template.loader import get_template
+from io import BytesIO
+import cgi
+from django.shortcuts import get_object_or_404
+from core.models import Menu
 
 
 @staff_member_required
-def warehouse_summary_view(request):
-    """
-    If you're using multiple admin sites with independent views you'll need to set
-    current_app manually and use correct admin.site
-    # request.current_app = 'admin'
-    """
-    context = admin.site.each_context(request)
-    context.update({
-        'title': 'Riepilogo magazzino',
-    })
+def get_menu_pdf(request, menu_id):
+    menu = get_object_or_404(Menu, id=menu_id)
+    return render_to_pdf('core/pdf/menu.html', {'menu': menu})
 
-    template = 'core/warehouse_summary.html'
-    return render(request, template, context)
+
+def render_to_pdf(template_src, context):
+    template = get_template(template_src)
+    html  = template.render(context)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(str(html), dest=result)
+    if not pdf.err:
+        return http.HttpResponse(result.getvalue(), content_type='application/pdf')
+    return http.HttpResponse('We had some errors<pre>%s</pre>' % cgi.escape(html))

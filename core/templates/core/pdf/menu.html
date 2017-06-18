@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>
+{%block title%}Menu{%endblock%}
+</title>
+<style type="text/css">
+{% block style %}
+	@page {
+		size: A4;
+		margin: 2cm;
+		
+	}
+    .menu-item {
+        font-style: italic;
+        font-size: 19px;
+        text-align: center;
+    }
+    .header {
+        font-size: 26px;
+        text-align: center;
+    }
+    .date {
+        text-align: right;
+        font-size: 16px;
+    }
+    h3 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+{%endblock%}	
+</style>
+</head>
+<body>
+<div>
+{%block page_header%}
+   <div class="header">
+   		<h1>Ristorante da Gigi</h1>
+   </div>
+	<hr />
+{%endblock%}
+{%block content%}
+<div >
+    <p class="date">{{ menu.date }}</p>
+    <h3>Menu' del giorno</h3>
+    {% for product in menu.courses.all %}
+        <p class="menu-item">{{ product }}</p>
+    {% endfor %}
+</div>
+{%endblock%}
+</div>
+<div id="footerContent">
+{%block page_foot%}
+
+{%endblock%}
+</div>
+</body>
+</html>

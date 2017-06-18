@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from .models import *
 from core.widgets import TableCheckboxSelectMultiple
 from django.utils.timezone import now
+from django.utils.html import format_html
+from django.urls import reverse
 
 @admin.register(Shelf, UoM)
 class GenericModelAdmin(admin.ModelAdmin):
@@ -21,6 +23,13 @@ class MenuAdminForm(forms.ModelForm):
 @admin.register(Menu)
 class MenuModelAdmin(admin.ModelAdmin):
     form = MenuAdminForm
+    list_display = ('date', 'get_print_menu_btn',)
+
+    def get_print_menu_btn(self, obj):
+        url = reverse('print_menu', kwargs={'menu_id': obj.id})
+        return format_html(f'<a href="{ url }"><button type="button" class="btn btn-sm btn-secondary">Stampa</button></a>')
+    
+    get_print_menu_btn.short_description = ''
 
 
 class ProductRecipeChoiceField(forms.ModelChoiceField):

@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
 from django.core.validators import MinValueValidator
-from django.utils.html import format_html
+from django.utils import formats
+
 
 class Shelf(models.Model):
     id = models.CharField(max_length=5, primary_key=True)
@@ -45,10 +46,6 @@ class Product(models.Model):
         result = math.inf
 
         for ingredient in self.recipe.ingredient_set.all():
-            print(ingredient)
-            print(ingredient.product.in_warehouse())
-            print(ingredient.qty_needed)
-
             result = min(result, ingredient.product.in_warehouse() / ingredient.qty_needed)
         
         return result
@@ -105,6 +102,10 @@ class Menu(models.Model):
     date = models.DateField(null=False, blank=False, verbose_name='Data')
     note = models.TextField(null=True, blank=True)
     courses = models.ManyToManyField(Product, verbose_name='Piatti')
+       
+
+    def __str__(self):
+        return formats.date_format(self.date)
 
 
     class Meta:
