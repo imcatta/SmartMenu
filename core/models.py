@@ -71,10 +71,13 @@ class Recipe(models.Model):
         verbose_name_plural = 'Ricette'
 
 class Ingredient(models.Model):
-    product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.CASCADE, verbose_name='Prodotto')
     recipe = models.ForeignKey(Recipe, null=False, blank=False, on_delete=models.CASCADE)
     qty_needed = models.DecimalField(decimal_places=5, max_digits=15, null=False, blank=False,
-                                     validators=[MinValueValidator(0)])
+                                     validators=[MinValueValidator(0)], verbose_name='Quantità')
+    
+    def __str__(self):
+        return 'Inrediente'
 
     class Meta:
         verbose_name = 'Ingrediente'
@@ -84,14 +87,16 @@ class Ingredient(models.Model):
 
 
 class Warehouse(models.Model):
-    product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, null=False, blank=False, on_delete=models.PROTECT, verbose_name='Prodotto')
     quantity = models.DecimalField(decimal_places=5, max_digits=15, null=False, blank=False,
                                    validators=[MinValueValidator(0)])
-    shelf = models.ForeignKey(Shelf, null=False, blank=False, on_delete=models.PROTECT)
-    date = models.DateTimeField(null=False, blank=False, default=now)
+    shelf = models.ForeignKey(Shelf, null=False, blank=False, on_delete=models.PROTECT, verbose_name='Scaffale')
+    date = models.DateTimeField(null=False, blank=False, default=now, verbose_name='Data')
 
     def human_readable_quantity(self):
         return f'{ self.quantity } { self.product.uom.name }'
+    
+    human_readable_quantity.short_description = 'Quantità'
 
     class Meta:
         verbose_name = 'Magazzino'
