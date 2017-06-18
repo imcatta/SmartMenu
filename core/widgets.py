@@ -14,3 +14,4 @@ class TableCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
 
             
         return context
+

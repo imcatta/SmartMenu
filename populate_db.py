@@ -121,7 +121,3 @@ with transaction.atomic():
     Ingredient.objects.create(recipe=r_lasagne, product=p_ragu, qty_needed=0.3)
     Ingredient.objects.create(recipe=r_lasagne, product=p_besciamella, qty_needed=0.01)
 
-
-
-    
-
