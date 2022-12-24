@@ -16,3 +16,4 @@ six==1.10.0
 webencodings==0.5.1
 wrapt==1.10.10
 xhtml2pdf==0.2b1
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
